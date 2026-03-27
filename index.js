@@ -18,9 +18,14 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-// Root endpoint
-app.get('/', (req, res) => {
-    res.send('<h1>Express with MySQL on Railway</h1><p>Endpoints:<br>GET /employees<br>POST /employees (body: {name, department, salary})</p>');
+// Root: Get all employees
+app.get('/', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM employee');
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 app.get('/hi', (req, res) => {
@@ -42,7 +47,7 @@ app.post('/employees', async (req, res) => {
 });
 
 // READ: Get all employees
-app.get('/employees', async (req, res) => {
+app.get('/', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM employee');
         res.json(rows);
