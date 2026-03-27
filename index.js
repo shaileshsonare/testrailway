@@ -18,13 +18,17 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-// Root: Get all employees
+// Root: Get all employees (v2.0 - With database connection fix)
 app.get('/', async (req, res) => {
     try {
+        console.log("Fetching employees from database...");
         const [rows] = await pool.query('SELECT * FROM employee');
-        res.json(rows);
+        res.json({
+            message: "Showing results from v2.0 (Employee Table)",
+            data: rows
+        });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "DB Error: " + err.message });
     }
 });
 
