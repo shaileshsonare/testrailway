@@ -6,13 +6,13 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// MySQL connection pool (Hardcoded values as requested)
+// MySQL connection pool (Secured with Railway Variables)
 const pool = mysql.createPool({
-  host: 'mysql.railway.internal',
-  user: 'root',
-  password: 'GAHvNWZobpwzZFakhibKgcBeJteUtikx',
-  database: process.env.MYSQLDATABASE || 'railway', // Default to 'railway' if not found
-  port: 3306,
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+  port: process.env.MYSQLPORT || 3306,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
