@@ -18,15 +18,21 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-// Root: Get all employees (v2.0 - With database connection fix)
+// GET: Root
 app.get('/', async (req, res) => {
     try {
-        console.log("Fetching employees from database...");
         const [rows] = await pool.query('SELECT * FROM employee');
-        res.json({
-            message: "Showing results from v2.0 (Employee Table)",
-            data: rows
-        });
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: "DB Error: " + err.message });
+    }
+});
+
+// GET: All Employees (Duplicate for convenience)
+app.get('/employees', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM employee');
+        res.json(rows);
     } catch (err) {
         res.status(500).json({ error: "DB Error: " + err.message });
     }
@@ -45,16 +51,6 @@ app.post('/employees', async (req, res) => {
             [name, department, salary]
         );
         res.status(201).json({ id: result.insertId, name, department, salary });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// READ: Get all employees
-app.get('/', async (req, res) => {
-    try {
-        const [rows] = await pool.query('SELECT * FROM employee');
-        res.json(rows);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
